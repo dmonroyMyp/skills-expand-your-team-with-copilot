@@ -25,6 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
 
+  // Dark mode elements
+  const darkModeToggle = document.getElementById("dark-mode-toggle");
+  const themeIcon = document.querySelector(".theme-icon");
+  const themeText = document.getElementById("theme-text");
+
   // Activity categories with corresponding colors
   const activityTypes = {
     sports: { label: "Sports", color: "#e8f5e9", textColor: "#2e7d32" },
@@ -234,10 +239,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   }
 
+  // Dark mode functions
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    
+    // Update button text and icon
+    if (isDarkMode) {
+      themeIcon.textContent = "☀️";
+      themeText.textContent = "Light";
+      localStorage.setItem("darkMode", "enabled");
+    } else {
+      themeIcon.textContent = "🌙";
+      themeText.textContent = "Dark";
+      localStorage.setItem("darkMode", "disabled");
+    }
+  }
+
+  // Load dark mode preference from localStorage
+  function loadDarkModePreference() {
+    const darkModePreference = localStorage.getItem("darkMode");
+    if (darkModePreference === "enabled") {
+      document.body.classList.add("dark-mode");
+      themeIcon.textContent = "☀️";
+      themeText.textContent = "Light";
+    }
+  }
+
   // Event listeners for authentication
   loginButton.addEventListener("click", openLoginModal);
   logoutButton.addEventListener("click", logout);
   closeLoginModal.addEventListener("click", closeLoginModalHandler);
+
+  // Event listener for dark mode toggle
+  darkModeToggle.addEventListener("click", toggleDarkMode);
 
   // Close login modal when clicking outside
   window.addEventListener("click", (event) => {
@@ -944,6 +979,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initialize app
+  loadDarkModePreference();
   checkAuthentication();
   initializeFilters();
   fetchActivities();
